@@ -13,6 +13,9 @@
   },
   "workspace": {
     "scripts": {
+      "a2l": [
+        "pwsh ./scripts/addr2line.ps1 libnoodleextensions.so $0"
+      ],
       "build": [
         "pwsh ./scripts/build.ps1 --release"
       ],
@@ -24,6 +27,12 @@
       ],
       "copyRelease": [
         "pwsh ./scripts/copy.ps1 --release"
+      ],
+      "stack": [
+        "pwsh ./scripts/ndk-stack.ps1"
+      ],
+      "tomb": [
+        "pwsh ./scripts/pull-tombstone.ps1"
       ]
     },
     "ndk": "^27.3.13750724",
