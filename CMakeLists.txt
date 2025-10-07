@@ -1,75 +1,89 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.21)
 
-option(QUEST "Build for quest" ON)
+# include some defines automatically made by qpm
+include(qpm_defines.cmake)
 
-# Globals
+project(${COMPILE_ID})
+
+# c++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED 20)
+
+message("Building ${COMPILE_ID} version ${MOD_VERSION} with ID ${MOD_ID} ${CMAKE_BUILD_TYPE}")
+
+# Enable interprocedural optimization (LTO) only for Release builds
+if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+        add_compile_options(-O3)
+else()
+        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
+endif()
+
+# Always export compile commands for tooling support
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
+# define that stores the actual source directory
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_compile_options(-frtti -fexceptions -fvisibility=hidden -fPIE -fPIC)
+# compile options used
+add_compile_options(-frtti -fexceptions)
 
-# Include. Include order matters!
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/utils.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/qpm.cmake)
-
-if(${CMAKE_BUILD_TYPE} STREQUAL "RELEASE" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo" OR ${CMAKE_BUILD_TYPE} STREQUAL "MinSizeRel")
-        # Better optimizations
-        add_compile_options(-O3)
-
-        # LTO
-        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-        add_compile_options(-flto)
-endif()
-
-if(${CMAKE_BUILD_TYPE} STREQUAL "DEBUG" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
-        add_compile_options(-g)
-endif()
-
-# Targets
-if(QUEST)
-        include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/targets/quest.cmake)
-endif()
-
-# Post build
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/strip.cmake)
-
-# stop symbols leaking
-# TODO: Fix
-# add_link_options(-Wl, --exclude-libs, ALL)
-project( noodleextensions
-        VERSION ${PACKAGE_VERSION})
-
-add_compile_definitions(MOD_ID="${CMAKE_PROJECT_NAME}")
-add_compile_definitions(VERSION="${CMAKE_PROJECT_VERSION}")
-
-# Set COMPILE_ID for qpm purposes
-set(COMPILE_ID ${CMAKE_PROJECT_NAME})
+# compile definitions used
+add_compile_definitions(VERSION=\"${MOD_VERSION}\")
+add_compile_definitions(MOD_ID=\"${MOD_ID}\")
+add_compile_definitions(USE_CODEGEN_FIELDS)
 
 # recursively get all src files
 RECURSE_FILES(cpp_file_list ${SOURCE_DIR}/*.cpp)
 RECURSE_FILES(c_file_list ${SOURCE_DIR}/*.c)
 
+RECURSE_FILES(inline_hook_c ${EXTERN_DIR}/includes/beatsaber-hook/shared/inline-hook/*.c)
+RECURSE_FILES(inline_hook_cpp ${EXTERN_DIR}/includes/beatsaber-hook/shared/inline-hook/*.cpp)
+
+# add all src files to compile
 add_library(
-        ${CMAKE_PROJECT_NAME}
+        ${COMPILE_ID}
         SHARED
         ${cpp_file_list}
         ${c_file_list}
+        ${inline_hook_c}
+        ${inline_hook_cpp}
 )
 
-# for inline hook
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE -llog)
+# add src dir as include dir
+target_include_directories(${COMPILE_ID} PRIVATE ${SOURCE_DIR})
 
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${INCLUDE_DIR})
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${SHARED_DIR})
+# add include dir as include dir
+target_include_directories(${COMPILE_ID} PRIVATE ${INCLUDE_DIR})
 
-# beatsaber hook inline hook
+# add shared dir as include dir
+target_include_directories(${COMPILE_ID} PUBLIC ${SHARED_DIR})
 
-RECURSE_FILES(src_inline_hook_beatsaber_hook_local_extra_c ${EXTERN_DIR}/includes/beatsaber-hook/shared/inline-hook/*.c)
-RECURSE_FILES(src_inline_hook_beatsaber_hook_local_extra_cpp ${EXTERN_DIR}/includes/beatsaber-hook/shared/inline-hook/*.cpp)
+# codegen includes
+target_include_directories(${COMPILE_ID} PRIVATE ${EXTERN_DIR}/includes/${CODEGEN_ID}/include)
 
-target_sources(${COMPILE_ID} PRIVATE ${src_inline_hook_beatsaber_hook_local_extra_c})
-target_sources(${COMPILE_ID} PRIVATE ${src_inline_hook_beatsaber_hook_local_extra_cpp})
+target_link_libraries(${COMPILE_ID} PRIVATE -llog)
+
+# add extern stuff like libs and other includes
+include(extern.cmake)
+
+add_custom_command(TARGET ${COMPILE_ID} POST_BUILD
+        COMMAND ${CMAKE_STRIP} -d --strip-all
+        "lib${COMPILE_ID}.so" -o "stripped_lib${COMPILE_ID}.so"
+        COMMENT "Strip debug symbols done on final binary.")
+
+add_custom_command(TARGET ${COMPILE_ID} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory debug
+        COMMENT "Rename the lib to debug_ since it has debug symbols"
+)
+
+add_custom_command(TARGET ${COMPILE_ID} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rename lib${COMPILE_ID}.so debug/lib${COMPILE_ID}.so
+        COMMENT "Rename the lib to debug_ since it has debug symbols"
+)
+
+add_custom_command(TARGET ${COMPILE_ID} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rename stripped_lib${COMPILE_ID}.so lib${COMPILE_ID}.so
+        COMMENT "Rename the stripped lib to regular"
+)

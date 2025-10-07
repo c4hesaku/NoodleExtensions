@@ -14,33 +14,17 @@
     },
     "workspace": {
       "scripts": {
-        "a2l": [
-          "pwsh ./scripts/addr2line.ps1 libnoodleextensions.so $0"
-        ],
         "build": [
-          "pwsh ./scripts/build.ps1"
+          "pwsh ./scripts/build.ps1 --release"
         ],
         "clean": [
           "pwsh ./scripts/build.ps1 -clean"
         ],
         "copy": [
-          "pwsh ./scripts/copy.ps1 $0:?"
+          "pwsh ./scripts/copy.ps1"
         ],
-        "logcat": [
-          "pwsh ./scripts/start-logging.ps1"
-        ],
-        "qmod": [
-          "pwsh ./scripts/build.ps1",
-          "pwsh ./scripts/createqmod.ps1"
-        ],
-        "restart": [
-          "pwsh ./scripts/restart-game.ps1"
-        ],
-        "stack": [
-          "pwsh ./scripts/ndk-stack.ps1"
-        ],
-        "tomb": [
-          "pwsh ./scripts/pull-tombstone.ps1"
+        "copyRelease": [
+          "pwsh ./scripts/copy.ps1 --release"
         ]
       },
       "ndk": "^27.3.13750724",
