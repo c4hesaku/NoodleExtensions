@@ -1,6 +1,6 @@
 # Thanks to konk rame rack: https://github.com/kodenamekrak/Cinema/blob/main/scripts/addr2line.ps1
 # Usage:
-# 1. Copy debug so from release to build/debug/libanytext.so
+# 1. Copy debug so from release to build/debug/libnoddleextension.so
 # 2. qpm s a2l <address such as 00000000000f12c8>
 
 param($p1, $p2)
