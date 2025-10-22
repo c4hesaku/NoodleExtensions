@@ -2,6 +2,24 @@
 
 A port of the Noodle Extensions mod made originally for the PC version of Beat Saber to the Oculus Quest platform.
 
+## 1.40.8 To-Do
+
+<h3><u>This list is not final and will continue to grow</u></h3>
+
+- [ ] Fix no badcut
+- [ ] Fix note jump animation (notes simply pop into existence rather than flying into view)
+- [ ] Fix crash when restarting a modchart
+- [ ] Fix crash when Replay tries to load a modchart replay
+- [ ] Investigate jump distance / speed
+- [ ] Search for Chroma issues
+
+## Bonus 1.40.8 fixes / features
+
+These would be nice to fix and implement, but were already broken / missing in 1.37 and therefore aren't required if I'm simply going for 1.37 parity.
+
+- [ ] Iirc saber animation was broken
+
+
 ## FAQ (Frequently Asked Questions)
 - Why are the wall colors not the same as PC (desaturated, transparent etc.)?
   - Due to the Quest not having distortion on walls, Noodle Extensions will attempt to change the walls materials to solid if these conditions are met:
