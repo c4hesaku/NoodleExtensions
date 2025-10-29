@@ -6,11 +6,15 @@ A port of the Noodle Extensions mod made originally for the PC version of Beat S
 
 <h3><u>This list is not final and will continue to grow</u></h3>
 
-- [ ] Fix no badcut
 - [ ] Fix note jump animation (notes simply pop into existence rather than flying into view)
+- [ ] Fix notes being invisible on pretty much all modcharts. Perhaps notes that are on a track?
+- [ ] Fix audio being drowned out for seemingly no reason. Common in Doppelganger. Perhps an issue with walls?
+- [ ] Fix no badcut
+- [ ] Fix notes looking towards (0, 0, 0). Maybe calculated in `src/hooks/NoteJump.cpp`
 - [ ] Fix crash when restarting a modchart
 - [ ] Fix crash when Replay tries to load a modchart replay
-- [ ] Investigate jump distance / speed
+- [x] Investigate jump distance / speed
+- [ ] Investigate frame rate / stutter issues
 - [ ] Search for Chroma issues
 
 ## Bonus 1.40.8 fixes / features
