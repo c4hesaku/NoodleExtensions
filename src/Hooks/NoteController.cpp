@@ -112,8 +112,6 @@ MAKE_HOOK_MATCH(NoteController_Init, &NoteController::Init, void, NoteController
                 float_t endRotation, float_t uniformScale, bool rotateTowardsPlayer, bool useRandomRotation) {
   NoteController_Init(self, noteData, noteSpawnData, endRotation, uniformScale, rotateTowardsPlayer, useRandomRotation);
 
-  NELogger::Logger.debug("NoteController_Init");
-
   if (!Hooks::isNoodleHookEnabled()) return;
 
   static auto CustomKlass = classof(CustomJSONData::CustomNoteData*);
