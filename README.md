@@ -6,7 +6,7 @@ A port of the Noodle Extensions mod made originally for the PC version of Beat S
 
 <h3><u>This list is not final and will continue to grow</u></h3>
 
-- [ ] Fix note jump animation (notes simply pop into existence rather than flying into view)
+- [x] Fix note jump animation (notes simply pop into existence rather than flying into view)
 - [ ] Fix notes being invisible on pretty much all modcharts. Perhaps notes that are on a track?
 - [ ] Fix audio being drowned out for seemingly no reason. Common in Doppelganger. Perhps an issue with walls?
 - [ ] Fix no badcut

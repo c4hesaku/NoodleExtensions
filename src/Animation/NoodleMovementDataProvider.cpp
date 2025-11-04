@@ -86,7 +86,7 @@ float NoodleExtensions::NoodleMovementDataProvider::get_halfJumpDuration() {
 }
 
 float NoodleExtensions::NoodleMovementDataProvider::get_moveDuration() {
-  return 0.0f;
+  return original->get_moveDuration();
 }
 
 float NoodleExtensions::NoodleMovementDataProvider::get_spawnAheadTime() {
