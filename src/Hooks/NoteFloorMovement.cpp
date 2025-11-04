@@ -2,6 +2,7 @@
 #include "beatsaber-hook/shared/utils/hooking.hpp"
 
 #include "GlobalNamespace/NoteFloorMovement.hpp"
+#include "GlobalNamespace/IVariableMovementDataProvider.hpp"
 #include "UnityEngine/Transform.hpp"
 #include "System/Action.hpp"
 
@@ -36,13 +37,25 @@ static NEVector::Vector3 DefinitePositionTranspile(NEVector::Vector3 original, N
 
 MAKE_HOOK_MATCH(NoteFloorMovement_ManualUpdate, &NoteFloorMovement::ManualUpdate, Vector3, NoteFloorMovement* self) {
   if (!Hooks::isNoodleHookEnabled()) return NoteFloorMovement_ManualUpdate(self);
+  // return NoteFloorMovement_ManualUpdate(self);
   float num = TimeSourceHelper::getSongTime(self->_audioTimeSyncController) - (self->_beatTime - self->_variableMovementDataProvider->moveDuration - self->_variableMovementDataProvider->halfJumpDuration);
-
+  Vector3 debugStartingPos = self->_localPosition;
   self->_localPosition = NEVector::Vector3::Lerp(NEVector::Vector3(self->_variableMovementDataProvider->moveStartPosition) + self->_moveStartOffset, NEVector::Vector3(self->_variableMovementDataProvider->moveEndPosition) + self->_moveEndOffset,
                                                  num / self->_variableMovementDataProvider->moveDuration);
+  Vector3 debugLerpPos = self->_localPosition;
   self->_localPosition = DefinitePositionTranspile(self->_localPosition, self);
 
   NEVector::Vector3 vector = NEVector::Quaternion(self->_worldRotation) * NEVector::Vector3(self->_localPosition);
+  NELogger::Logger.debug("Song time: {}, Original position: ({:.2f}, {:.2f}, {:.2f}), New position: ({:.2f}, {:.2f}, {:.2f}), Lerp position: ({:.2f}, {:.2f}, {:.2f}), beatTime: {:.2f}, moveDuration: {:.2f}, halfJumpDuration: {:.2f}, num: {:.2f}, &noteUpdateAD: {}", 
+    TimeSourceHelper::getSongTime(self->_audioTimeSyncController), 
+    debugStartingPos.x, debugStartingPos.y, debugStartingPos.z,
+    vector.x, vector.y, vector.z,
+    debugLerpPos.x, debugLerpPos.y, debugLerpPos.z, 
+    self->_beatTime,
+    self->_variableMovementDataProvider->moveDuration,
+    self->_variableMovementDataProvider->halfJumpDuration,
+    num,
+    static_cast<void*>(noteUpdateAD));
   self->get_transform()->set_localPosition(vector);
   return vector;
 }

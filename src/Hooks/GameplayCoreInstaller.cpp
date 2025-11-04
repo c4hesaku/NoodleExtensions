@@ -25,6 +25,8 @@ using namespace GlobalNamespace;
 MAKE_HOOK_MATCH(InstallBindings, &GameplayCoreInstaller::InstallBindings, void, GameplayCoreInstaller* self) {
   if (!Hooks::isNoodleHookEnabled()) return InstallBindings(self);
 
+  NELogger::Logger.debug("InstallBindings");
+
   auto* difficultyBeatmap = self->_sceneSetupData->beatmapBasicData;
   GameplayModifiers* gameplayModifiers = self->_sceneSetupData->gameplayModifiers;
 
