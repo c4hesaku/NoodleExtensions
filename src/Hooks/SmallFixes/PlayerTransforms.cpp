@@ -38,7 +38,7 @@ MAKE_HOOK_MATCH(PlayerTransforms_HeadsetOffsetZ, &PlayerTransforms::Update, void
     return;
   }
 
-  if (!_parentTransform) {
+  if (!_parentTransform || _parentTransform->___m_CachedPtr.m_value == nullptr) {
     _parentTransform = self->_originParentTransform;
     // _noodlePlayerTransformManager.Active ? _noodlePlayerTransformManager.Head : originParentTransform;
   }
