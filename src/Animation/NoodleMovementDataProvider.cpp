@@ -42,7 +42,7 @@ NoodleExtensions::NoodleMovementDataProvider* NoodleExtensions::NoodleMovementDa
   float spawnOffset = ad.objectData.noteJumpStartBeatOffset.value_or(noteJumpStartBeatOffset);
   switch (noteJumpValueType) {
     case GlobalNamespace::BeatmapObjectSpawnMovementData::NoteJumpValueType::JumpDuration:
-      jumpDistanceOverride = spawnOffset * 2.0f;
+      jumpDurationOverride = spawnOffset * 2.0f;
       halfJumpDurationOverride = spawnOffset;
       break;
     case GlobalNamespace::BeatmapObjectSpawnMovementData::NoteJumpValueType::BeatOffset:
@@ -52,18 +52,22 @@ NoodleExtensions::NoodleMovementDataProvider* NoodleExtensions::NoodleMovementDa
         njs,
         oneBeatDuration,
         spawnOffset);
+
+      float halfJump = oneBeatDuration * halfJumpDurationInBeats;
+      halfJumpDurationOverride = halfJump;
+      jumpDurationOverride = halfJump * 2.0f;
       break;
   }
 
-  spawnAheadTimeOverride = 0.5f + get_halfJumpDuration();
+  spawnAheadTimeOverride = GlobalNamespace::VariableMovementDataProvider::kMoveDuration + get_halfJumpDuration();
 
   float jumpDist = njs * get_jumpDuration();
   jumpDistanceOverride = jumpDist;
   float halfJumpDistance = jumpDist * 0.5f;
   NEVector::Vector3 center = beatmapObjectSpawnMovementData->centerPos;
   NEVector::Vector3 forward = NEVector::Vector3::forward();
-
-  moveStartPositionOverride = center + (forward * (100.0f * halfJumpDistance));
+  
+  moveStartPositionOverride = center + (forward * (GlobalNamespace::VariableMovementDataProvider::kMoveDistance + halfJumpDistance));
   moveEndPositionOverride = center + (forward * halfJumpDistance);
   jumpEndPositionOverride = center - (forward * halfJumpDistance);
   return this;
