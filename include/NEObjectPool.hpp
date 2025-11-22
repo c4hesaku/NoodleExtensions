@@ -20,23 +20,23 @@ public:
     }
   }
 
-  SafePtr<NoodleMovementDataProvider> get(GlobalNamespace::BeatmapObjectData* beatmapObjectData) {
+  SafePtr<NoodleMovementDataProvider> get(GlobalNamespace::BeatmapObjectData* beatmapObjectData,
+                                          GlobalNamespace::IVariableMovementDataProvider* original) {
     if (free.empty()) {
       auto obj = SafePtr(NoodleMovementDataProvider::New_ctor());
-      obj->InitObject(beatmapObjectData);
-      put(obj);
+      obj->InitObject(beatmapObjectData,original);
       return obj;
     }
 
     SafePtr<NoodleMovementDataProvider> obj = free.back();
     free.pop_back();
-    obj->InitObject(beatmapObjectData);
+    obj->InitObject(beatmapObjectData, original);
     return obj;
   }
 
   void put(SafePtr<NoodleMovementDataProvider> obj) {
     // reset variables here if needed
-    obj->InitObject(nullptr);
+    obj->InitObject(nullptr, nullptr);
     free.emplace_back(obj);
   }
 };

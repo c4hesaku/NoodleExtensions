@@ -9,7 +9,9 @@
 DECLARE_CLASS_CODEGEN_INTERFACES(NoodleExtensions, NoodleMovementDataProvider, System::Object, GlobalNamespace::IVariableMovementDataProvider*) {
   DECLARE_CTOR(ctor);
 
-  DECLARE_INSTANCE_METHOD(NoodleMovementDataProvider*, InitObject, GlobalNamespace::BeatmapObjectData* beatmapObjectData);
+  DECLARE_INSTANCE_METHOD(NoodleMovementDataProvider*, InitObject,
+                          GlobalNamespace::BeatmapObjectData * beatmapObjectData,
+                          GlobalNamespace::IVariableMovementDataProvider * original);
 
   DECLARE_OVERRIDE_METHOD_MATCH(bool, get_wasUpdatedThisFrame, &GlobalNamespace::IVariableMovementDataProvider::get_wasUpdatedThisFrame);
   DECLARE_OVERRIDE_METHOD_MATCH(float, get_jumpDistance, &GlobalNamespace::IVariableMovementDataProvider::get_jumpDistance);
@@ -42,8 +44,10 @@ DECLARE_CLASS_CODEGEN_INTERFACES(NoodleExtensions, NoodleMovementDataProvider, S
   DECLARE_OVERRIDE_METHOD_MATCH(
     float, JumpPosYForLineLayerAtDistanceFromPlayerWithoutJumpOffset, 
     &GlobalNamespace::IVariableMovementDataProvider::JumpPosYForLineLayerAtDistanceFromPlayerWithoutJumpOffset, float highestJumpPosY, float distanceFromPlayer);
-  
+
 public:
+  DECLARE_SIMPLE_DTOR();
+  
   SafePtr<GlobalNamespace::IVariableMovementDataProvider> original;
   SafePtr<GlobalNamespace::BeatmapObjectSpawnMovementData> beatmapObjectSpawnMovementData;
   float noteJumpStartBeatOffset;
