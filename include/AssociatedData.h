@@ -58,7 +58,7 @@ struct ObjectCustomData {
   bool disableNoteLook;
   std::optional<std::string> link;
 
-  // obstacles
+  // obstacles [width, height, length]
   std::optional<std::array<std::optional<float>, 3>> scale;
 
   ObjectCustomData() = default;
