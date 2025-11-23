@@ -12,7 +12,6 @@ namespace {
 
 PointDefinitionW TryGetPointData(BeatmapAssociatedData& beatmapAD, rapidjson::Value const& animation,
                                  std::string_view name, Tracks::ffi::WrapBaseValueType type) {
-  beatmapAD.getPointDefinition(animation, name, type);
   PointDefinitionW pointDef = beatmapAD.getPointDefinition(animation, name, type);
   return pointDef;
 }
