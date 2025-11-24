@@ -210,8 +210,6 @@ void ParentObject::AssignTrack(ParentTrackEventData const& parentTrackEventData)
     // track.gameObjectModificationEvent += { &ParentObject::HandleGameObject, instance };
     instance->childrenTracks.emplace(track);
     auto callback = track.RegisterGameObjectCallback([instance](UnityEngine::GameObject* go, bool added) {
-      NELogger::Logger.debug("ParentObject callback for track {} on game object {} (added: {})",
-                             instance->track.GetName(), go->get_name(), added);
       instance->HandleGameObject(instance->track, go, !added);
     });
     instance->gameObjectModificationCallbacks[track] = callback;
