@@ -52,7 +52,7 @@ template <typename T> constexpr std::optional<T> operator*(std::optional<T> cons
 std::optional<NEVector::Vector3> AnimationHelper::GetDefinitePositionOffset(AnimationObjectData const& animationData,
                                                                             std::span<TrackW const> tracks,
                                                                             float time) {
-  PointDefinitionW localDefinitePosition = animationData.definitePosition;
+  auto const& localDefinitePosition = animationData.definitePosition;
 
   std::optional<Vector3> pathDefinitePosition =
       localDefinitePosition ? std::optional(localDefinitePosition.InterpolateVec3(time)) : std::nullopt;
@@ -70,7 +70,7 @@ std::optional<NEVector::Vector3> AnimationHelper::GetDefinitePositionOffset(Anim
 
   if (!pathDefinitePosition) return std::nullopt;
 
-  auto const position = animationData.position;
+  auto const& position = animationData.position;
   std::optional<Vector3> pathPosition = position ? std::optional(position.InterpolateVec3(time)) : std::nullopt;
   std::optional<Vector3> trackPosition;
 
@@ -113,13 +113,13 @@ ObjectOffset AnimationHelper::GetObjectOffset(AnimationObjectData const& animati
                                               float time) {
   ObjectOffset offset;
 
-  PointDefinitionW position = animationData.position;
-  PointDefinitionW rotation = animationData.rotation;
-  PointDefinitionW scale = animationData.scale;
-  PointDefinitionW localRotation = animationData.localRotation;
-  PointDefinitionW dissolve = animationData.dissolve;
-  PointDefinitionW dissolveArrow = animationData.dissolveArrow;
-  PointDefinitionW cuttable = animationData.cuttable;
+  auto const& position = animationData.position;
+  auto const& rotation = animationData.rotation;
+  auto const& scale = animationData.scale;
+  auto const& localRotation = animationData.localRotation;
+  auto const& dissolve = animationData.dissolve;
+  auto const& dissolveArrow = animationData.dissolveArrow;
+  auto const& cuttable = animationData.cuttable;
 
   // Get path properties from animation data
   std::optional<Vector3> pathPosition = position ? std::optional(position.InterpolateVec3(time)) : std::nullopt;

@@ -8,44 +8,34 @@
 using namespace TracksAD;
 using namespace NEVector;
 
-namespace {
-
-PointDefinitionW TryGetPointData(BeatmapAssociatedData& beatmapAD, rapidjson::Value const& animation,
-                                 std::string_view name, Tracks::ffi::WrapBaseValueType type) {
-  PointDefinitionW pointDef = beatmapAD.getPointDefinition(animation, name, type);
-  return pointDef;
-}
-
-} // namespace
-
 AnimationObjectData::AnimationObjectData(BeatmapAssociatedData& beatmapAD, rapidjson::Value const& animation, bool v2)
     : parsed(true) {
   position =
-      TryGetPointData(beatmapAD, animation,
+      beatmapAD.getPointDefinition( animation,
                       v2 ? NoodleExtensions::Constants::V2_POSITION : NoodleExtensions::Constants::OFFSET_POSITION,
                       Tracks::ffi::WrapBaseValueType::Vec3);
   rotation =
-      TryGetPointData(beatmapAD, animation,
+      beatmapAD.getPointDefinition( animation,
                       v2 ? NoodleExtensions::Constants::V2_ROTATION : NoodleExtensions::Constants::OFFSET_ROTATION,
                       Tracks::ffi::WrapBaseValueType::Quat);
-  scale = TryGetPointData(beatmapAD, animation,
+  scale = beatmapAD.getPointDefinition( animation,
                           v2 ? NoodleExtensions::Constants::V2_SCALE : NoodleExtensions::Constants::SCALE,
                           Tracks::ffi::WrapBaseValueType::Vec3);
   localRotation =
-      TryGetPointData(beatmapAD, animation,
+      beatmapAD.getPointDefinition( animation,
                       v2 ? NoodleExtensions::Constants::V2_LOCAL_ROTATION : NoodleExtensions::Constants::LOCAL_ROTATION,
                       Tracks::ffi::WrapBaseValueType::Quat);
-  dissolve = TryGetPointData(beatmapAD, animation,
+  dissolve = beatmapAD.getPointDefinition( animation,
                              v2 ? NoodleExtensions::Constants::V2_DISSOLVE : NoodleExtensions::Constants::DISSOLVE,
                              Tracks::ffi::WrapBaseValueType::Float);
   dissolveArrow =
-      TryGetPointData(beatmapAD, animation,
+      beatmapAD.getPointDefinition( animation,
                       v2 ? NoodleExtensions::Constants::V2_DISSOLVE_ARROW : NoodleExtensions::Constants::DISSOLVE_ARROW,
                       Tracks::ffi::WrapBaseValueType::Float);
-  cuttable = TryGetPointData(beatmapAD, animation,
+  cuttable = beatmapAD.getPointDefinition( animation,
                              v2 ? NoodleExtensions::Constants::V2_CUTTABLE : NoodleExtensions::Constants::INTERACTABLE,
                              Tracks::ffi::WrapBaseValueType::Float);
-  definitePosition = TryGetPointData(beatmapAD, animation,
+  definitePosition = beatmapAD.getPointDefinition( animation,
                                      v2 ? NoodleExtensions::Constants::V2_DEFINITE_POSITION
                                         : NoodleExtensions::Constants::DEFINITE_POSITION,
                                      Tracks::ffi::WrapBaseValueType::Vec3);
