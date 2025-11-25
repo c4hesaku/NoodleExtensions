@@ -279,9 +279,10 @@ void ParentObject::HandleGameObject(TrackW track, UnityEngine::GameObject* go, b
 }
 
 ParentObject::~ParentObject() {
-  // for (auto& childTrack : childrenTracks) {
-  // childTrack->gameObjectModificationEvent -= { &ParentObject::HandleGameObject, this };
-  //}
+  for (auto childTrack : childrenTracks) {
+    // childTrack->gameObjectModificationEvent -= { &ParentObject::HandleGameObject, this };
+    RemoveCallback(childTrack, this);
+  }
   // just in case
   // track->gameObjectModificationEvent -= { &ParentObject::HandleGameObject, this };
 
