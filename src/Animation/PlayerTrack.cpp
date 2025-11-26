@@ -184,6 +184,8 @@ void PlayerTrack::OnDestroy() {
 void PlayerTrack::UpdateDataOld() {
   float noteLinesDistance = GlobalNamespace::StaticBeatmapObjectSpawnMovementData::kNoteLinesDistance;
 
+  // DO NOT USE LAST CHECKED TIME HERE BECAUSE IT CAUSES BUGS
+  // IT WAS NOT DESIGNED FOR USAGE WITH V2 TRACKS MATH
   std::optional<NEVector::Quaternion> rotation = track.GetPropertyNamed(PropertyNames::Rotation).GetQuat();
   std::optional<NEVector::Vector3> position =
       track.GetPropertyNamed(PropertyNames::Position).GetVec3();

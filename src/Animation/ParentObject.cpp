@@ -102,10 +102,12 @@ void ParentObject::UpdateDataOld(bool forced) {
   }
   float noteLinesDistance = GlobalNamespace::StaticBeatmapObjectSpawnMovementData::kNoteLinesDistance;
 
-  auto const rotation = track.GetPropertyNamed(PropertyNames::Rotation).GetQuat(lastCheckedTime);
-  auto const localRotation = track.GetPropertyNamed(PropertyNames::LocalRotation).GetQuat(lastCheckedTime);
-  auto const position = track.GetPropertyNamed(PropertyNames::Position).GetVec3(lastCheckedTime);
-  auto const scale = track.GetPropertyNamed(PropertyNames::Scale).GetVec3(lastCheckedTime);
+  // DO NOT USE LAST CHECKED TIME HERE BECAUSE IT CAUSES BUGS
+  // IT WAS NOT DESIGNED FOR USAGE WITH V2 TRACKS MATH
+  auto const rotation = track.GetPropertyNamed(PropertyNames::Rotation).GetQuat();
+  auto const localRotation = track.GetPropertyNamed(PropertyNames::LocalRotation).GetQuat();
+  auto const position = track.GetPropertyNamed(PropertyNames::Position).GetVec3();
+  auto const scale = track.GetPropertyNamed(PropertyNames::Scale).GetVec3();
 
   NEVector::Quaternion worldRotationQuaternion = startRot;
   NEVector::Vector3 positionVector = worldRotationQuaternion * (startPos * noteLinesDistance);
