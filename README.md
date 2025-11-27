@@ -20,7 +20,7 @@ A port of the Noodle Extensions mod made originally for the PC version of Beat S
 - [X] Fix parenting inconsistencies (likely order based e.g "Make a Wish")
 - [X] Fix obstacle spawn, duration and speed e.g `Try This` the arrows are in the lane before moved. 
 - [ ] Fix obstacle rotation e.g flower in `Try`.
-- [ ] Fix Chroma not removing pieces of environment
+- [ ] Fix Chroma not overriding player's override environment and colors
 
 ### [Recorded](https://drive.google.com/drive/folders/1XNpSEJ44uwEr9L9W3qukeGNnQX24wF0U?usp=drive_link) Maps
 
